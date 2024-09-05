@@ -40,6 +40,7 @@ public_users.get("/author/:author", function (req, res) {
 
   // Iterating through books and match with author
   keys.forEach((isbn) => {
+    // Matching
     if (books[isbn].author.toLowerCase().includes(author.toLowerCase())) {
       booksFromAuthor[isbn] = books[isbn]; // Adding book to obj while keeping the ISBN
     }
@@ -58,7 +59,7 @@ public_users.get("/title/:title", function (req, res) {
   let keys = Object.keys(books);
 
   keys.forEach((isbn) => {
-    // check if current book matches the title provided in params
+    // Matching
     if (books[isbn].title.toLowerCase().includes(title.toLowerCase())) {
       booksByTitle[isbn] = books[isbn];
     }

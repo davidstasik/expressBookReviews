@@ -40,7 +40,7 @@ public_users.get("/author/:author", function (req, res) {
 
   // Iterating through books and match with author
   keys.forEach((isbn) => {
-    if (books[isbn].author === author) {
+    if (books[isbn].author.toLowerCase().includes(author.toLowerCase())) {
       booksFromAuthor[isbn] = books[isbn]; // Adding book to obj while keeping the ISBN
     }
   });
@@ -50,8 +50,21 @@ public_users.get("/author/:author", function (req, res) {
 
 // Get all books based on title
 public_users.get("/title/:title", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "Yet to be implemented" });
+  let title = req.params.title;
+
+  let booksByTitle = {};
+
+  // Obtaining all keys from books
+  let keys = Object.keys(books);
+
+  keys.forEach((isbn) => {
+    // check if current book matches the title provided in params
+    if (books[isbn].title.toLowerCase().includes(title.toLowerCase())) {
+      booksByTitle[isbn] = books[isbn];
+    }
+  });
+
+  res.status(200).send(booksByTitle);
 });
 
 //  Get book review

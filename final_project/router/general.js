@@ -16,8 +16,16 @@ public_users.get("/", function (req, res) {
 
 // Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
-  //Write your code here
-  return res.status(300).json({ message: "ISBN Yet to be implemented" });
+  let isbn = req.params.isbn;
+
+  // Note: I am assuming the authors of this final project mean that ISBN is the number in the books dict
+  let book = books[isbn];
+
+  if (book) {
+    res.status(200).send(book);
+  } else {
+    res.status(404).json({ message: `No book with the ISBN "${isbn}" found.` });
+  }
 });
 
 // Get book details based on author

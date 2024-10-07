@@ -13,7 +13,7 @@ public_users.post("/register", (req, res) => {
   if (!username || !password) {
     res.status(400).json({
       message:
-        "Invalid request: Both username and password are required to complete the registration.",
+        "Invalid request: Both fields 'username' and 'password' are required to complete the registration.",
     });
   }
 
@@ -33,6 +33,7 @@ public_users.post("/register", (req, res) => {
   }
 
   // If everything is fine, register the new user
+  // in a real application this would be stored into a database with a hashed version of the password
   users.push({ username: username, password: password });
   console.log(users);
 

@@ -17,15 +17,15 @@ app.use(
   })
 );
 
+// Check for all auth routes if the user is authenticated
 app.use("/customer/auth/*", function auth(req, res, next) {
-  //Write the authenication mechanism here
-
   // Check if session token exists
   if (req.session.authorization) {
-    let token = req.session.authorization["accessToken"];
+    let token = req.session.authorization["token"];
 
     // Verify token
     jwt.verify(token, "thisisasecret", (err, user) => {
+      // secret hardcoded only for demonstration purposes. Better move it to .env
       if (!err) {
         req.user = user;
         next();

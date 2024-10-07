@@ -164,7 +164,7 @@ public_users.get("/author-async/:author", async function (req, res) {
   }
 });
 
-// Get all books based on title
+// Task 4: Get all books based on title
 public_users.get("/title/:title", function (req, res) {
   let title = req.params.title;
 
@@ -181,6 +181,38 @@ public_users.get("/title/:title", function (req, res) {
   });
 
   return res.status(200).send(booksByTitle);
+});
+
+// Task 13: async equivalent to task 4
+public_users.get("/title-async/:title", async function (req, res) {
+  const fetchBooksByTitle = async (title) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let booksByTitle = {};
+
+        // Obtaining all keys from books
+        let keys = Object.keys(books);
+
+        keys.forEach((isbn) => {
+          // Matching
+          if (books[isbn].title.toLowerCase().includes(title.toLowerCase())) {
+            booksByTitle[isbn] = books[isbn];
+          }
+        });
+
+        resolve(booksByTitle);
+      }, 3000);
+    });
+  };
+
+  let title = req.params.title;
+
+  try {
+    fetchedBooksByTitle = await fetchBooksByTitle(title);
+    return res.status(200).send(fetchedBooksByTitle);
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
+  }
 });
 
 //  Get book review

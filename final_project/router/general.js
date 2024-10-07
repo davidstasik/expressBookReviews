@@ -109,7 +109,7 @@ public_users.get("/isbn-async/:isbn", async function (req, res) {
   }
 });
 
-// Get book details based on author
+// Task 3: Get book details based on author
 // Note: Returns empty {} if no books found or author not found
 public_users.get("/author/:author", function (req, res) {
   let author = req.params.author;
@@ -128,6 +128,40 @@ public_users.get("/author/:author", function (req, res) {
   });
 
   return res.status(200).json(booksFromAuthor);
+});
+
+// Task 12: Async equivalent to task 3
+public_users.get("/author-async/:author", async function (req, res) {
+  const fetchBooksByAuthor = async (author) => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        let booksFromAuthor = {};
+        // Obtaining all keys from books
+        let keys = Object.keys(books);
+
+        // Iterating through books and match with author
+        keys.forEach((isbn) => {
+          // Matching
+          if (books[isbn].author.toLowerCase().includes(author.toLowerCase())) {
+            booksFromAuthor[isbn] = books[isbn]; // Adding book to obj while keeping the ISBN
+          }
+        });
+
+        resolve(booksFromAuthor);
+      }, 3000);
+    });
+  };
+
+  const author = req.params.author;
+
+  try {
+    const fetchedBooksFromAuthor = await fetchBooksByAuthor(author);
+    return res.status(200).json(fetchedBooksFromAuthor);
+  } catch (error) {
+    return res.status(500).json({
+      message: "Error: Could not fetch books by Author. || " + error.message,
+    });
+  }
 });
 
 // Get all books based on title

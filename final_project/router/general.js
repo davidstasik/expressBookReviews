@@ -42,9 +42,28 @@ public_users.post("/register", (req, res) => {
     .json({ message: `The user '${username}' was registered successfully.` });
 });
 
-// Get the book list available in the shop
+// // Task 1: Get the book list available in the shop
 public_users.get("/", function (req, res) {
   return res.status(200).send(JSON.stringify(books, null, 4));
+});
+
+// Task 10: async equivalent to task 1:
+public_users.get("/get-books-async", async function (req, res) {
+  // Simulating an external data fetch that takes 3s
+  const fetchBooks = async () => {
+    return new Promise((resolve) => {
+      setTimeout(() => {
+        resolve(books);
+      }, 3000);
+    });
+  };
+
+  try {
+    const fetchedBooks = await fetchBooks();
+    return res.status(200).send(JSON.stringify(fetchedBooks, null, 4));
+  } catch (error) {
+    return res.status(500).json({ message: `Error: Could not fetch books.` });
+  }
 });
 
 // Get book details based on ISBN

@@ -48,6 +48,7 @@ public_users.get("/", function (req, res) {
 });
 
 // Task 10: async equivalent to task 1:
+// Note: axios is not needed here, see https://www.coursera.org/learn/developing-backend-apps-with-nodejs-and-express/discussions/weeks/4/threads/8CvLGlhKEe66bBLEH6-jOQ
 public_users.get("/get-books-async", async function (req, res) {
   // Simulating an external data fetch that takes 3s
   const fetchBooks = async () => {
@@ -66,7 +67,7 @@ public_users.get("/get-books-async", async function (req, res) {
   }
 });
 
-// Get book details based on ISBN
+// Task 2: Get book details based on ISBN
 public_users.get("/isbn/:isbn", function (req, res) {
   let isbn = req.params.isbn;
 
@@ -79,6 +80,32 @@ public_users.get("/isbn/:isbn", function (req, res) {
     return res
       .status(404)
       .json({ message: `No book with the ISBN "${isbn}" found.` });
+  }
+});
+
+// Task 11: Async equivilent to task 2
+public_users.get("/isbn-async/:isbn", async function (req, res) {
+  // Simulating an external data fetch that takes 3s
+  const fetchBookByIsbn = async (isbn) => {
+    return new Promise((resolve, reject) => {
+      setTimeout(() => {
+        const book = books[isbn];
+        if (book) {
+          resolve(book);
+        } else {
+          reject(new Error(`No book with the ISBN "${isbn}" found.`));
+        }
+      }, 3000);
+    });
+  };
+
+  const isbn = req.params.isbn;
+
+  try {
+    const fetchedBook = await fetchBookByIsbn(isbn);
+    return res.status(200).send(fetchedBook);
+  } catch (error) {
+    return res.status(404).json({ message: error.message });
   }
 });
 
